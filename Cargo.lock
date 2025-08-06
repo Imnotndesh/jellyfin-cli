@@ -744,6 +744,7 @@ dependencies = [
  "clap",
  "confy",
  "inquire",
+ "once_cell",
  "reqwest",
  "serde",
  "serde_json",

@@ -1,11 +1,22 @@
 use reqwest::{Client, RequestBuilder};
 use crate::jellyfin::config::load_config;
+use once_cell::sync::Lazy;
+
+static HTTP_CLIENT: Lazy<Client> = Lazy::new(|| {
+    Client::builder()
+        .user_agent("jellyfin-cli")
+        .build()
+        .expect("Failed to build HTTP client")
+});
+
+pub fn get_client() -> &'static Client {
+    &HTTP_CLIENT
+}
 
 pub async fn authed_get_json<T: serde::de::DeserializeOwned>(
-    client: &Client,
     url: &str,
 ) -> Result<T, String> {
-    let builder = authed_get_request(client, url)?;
+    let builder = authed_get_request(get_client(), url)?;
     let res = builder
         .send()
         .await

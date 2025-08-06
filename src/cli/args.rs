@@ -29,20 +29,14 @@ pub enum Commands {
         server: Option<String>,
     },
     Search {
-        /// Query string to search for
         #[arg(short, long)]
         query: String,
-
-        /// Jellyfin server base URL
         #[arg(short, long)]
         server: Option<String>,
     },
     Watch {
-        /// Query string to search for
         #[arg(short, long)]
         query: String,
-
-        /// Jellyfin server base URL
         #[arg(short, long)]
         server: Option<String>,
     },

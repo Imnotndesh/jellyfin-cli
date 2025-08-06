@@ -1,4 +1,3 @@
-use reqwest::{Client};
 use crate::jellyfin::models::{ItemsResponse, MediaItem, MediaType,SearchResponse};
 use crate::jellyfin::config::load_config;
 use crate::jellyfin::http::authed_get_json;
@@ -9,8 +8,6 @@ pub async fn list_items(base_url: &str, media_type: MediaType) -> Result<Vec<Med
         .user_id
         .ok_or("Missing user ID in saved config")?;
 
-    let client = Client::new();
-
     let url = format!(
         "{}/Users/{}/Items?IncludeItemTypes={}&Recursive=true&SortBy=SortName",
         base_url.trim_end_matches('/'),
@@ -18,7 +15,7 @@ pub async fn list_items(base_url: &str, media_type: MediaType) -> Result<Vec<Med
         media_type.as_str()
     );
 
-    let res: ItemsResponse = authed_get_json(&client, &url).await?;
+    let res: ItemsResponse = authed_get_json(&url).await?;
     Ok(res.items)
 }
 
@@ -28,8 +25,6 @@ pub async fn search_items(base_url: &str, query: &str) -> Result<Vec<MediaItem>,
         base_url.trim_end_matches('/'),
         query
     );
-
-    let client = Client::new();
-    let response: Result<SearchResponse, String> = authed_get_json(&client, &url).await;
+    let response: Result<SearchResponse, String> = authed_get_json(&url).await;
     Ok(response.unwrap().search_hints)
 }
