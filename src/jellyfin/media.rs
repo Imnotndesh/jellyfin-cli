@@ -2,7 +2,6 @@ use reqwest::{Client};
 use crate::jellyfin::models::{ItemsResponse, MediaItem, MediaType,SearchResponse};
 use crate::jellyfin::config::load_config;
 use crate::jellyfin::http::authed_get_json;
-use crate::utils::select::choose_item;
 
 pub async fn list_items(base_url: &str, media_type: MediaType) -> Result<Vec<MediaItem>, String> {
     let config = load_config().map_err(|_| "Failed to load config")?;

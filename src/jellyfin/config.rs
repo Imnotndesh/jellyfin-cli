@@ -7,7 +7,7 @@ pub struct JellyfinConfig {
     pub user_id: Option<String>,
 }
 
-impl ::std::default::Default for JellyfinConfig {
+impl Default for JellyfinConfig {
     fn default() -> Self {
         Self{
             access_token: None,
@@ -16,13 +16,22 @@ impl ::std::default::Default for JellyfinConfig {
         }
     }
 }
-
+// Save to config
 pub fn save_config(config: &JellyfinConfig) -> Result<(), confy::ConfyError> {
     confy::store("jellyfin-cli", "config",config)
 }
+// Get Whole config 
 pub fn load_config() -> Result<JellyfinConfig, confy::ConfyError> {
     confy::load("jellyfin-cli", "config")
 }
+// Get token from config
+pub fn get_token() -> Result<String, String> {
+    let config = load_config().map_err(|_| "❌ Failed to load config")?;
+    config
+        .access_token
+        .ok_or_else(|| "❌ Access token not found in saved config.".to_string())
+}
+// If no server passed pick default saved
 pub fn resolve_server(cli_input: Option<String>) -> Result<String, String> {
     if let Some(server) = cli_input {
         Ok(server)
