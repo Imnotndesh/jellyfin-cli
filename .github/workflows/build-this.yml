@@ -3,7 +3,7 @@ name: Release Cross-Platform Binaries
 on:
   push:
     tags:
-      - 'v*' # Trigger on version tags like v0.1.0
+      - 'v*'  # Trigger on version tags like v0.1.0
 
 jobs:
   build-linux:
@@ -14,19 +14,19 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Rust
-        uses: actions/setup-rust@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          rust-version: stable
+          toolchain: stable
 
       - name: Build
         run: cargo build --release
 
-      - name: Rename binary
+      - name: Prepare Artifact
         run: |
           mkdir -p dist
           cp target/release/jellyfin-cli dist/jellyfin-cli-linux-x86_64
 
-      - name: Upload to Release
+      - name: Upload Artifact
         uses: softprops/action-gh-release@v1
         with:
           files: dist/jellyfin-cli-linux-x86_64
@@ -41,23 +41,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Rust
-        uses: actions/setup-rust@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          rust-version: stable
+          toolchain: stable
 
       - name: Build
         run: cargo build --release
 
-      - name: Rename binary
-        shell: bash
+      - name: Prepare Artifact
         run: |
-          mkdir -p dist
-          cp target/release/jellyfin-cli.exe dist/jellyfin-cli-windows-x86_64.exe
+          mkdir dist
+          copy target\release\jellyfin-cli.exe dist\jellyfin-cli-windows-x86_64.exe
 
-      - name: Upload to Release
+      - name: Upload Artifact
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/jellyfin-cli-windows-x86_64.exe
+          files: dist\jellyfin-cli-windows-x86_64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -69,19 +68,19 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Rust
-        uses: actions/setup-rust@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          rust-version: stable
+          toolchain: stable
 
       - name: Build
         run: cargo build --release
 
-      - name: Rename binary
+      - name: Prepare Artifact
         run: |
           mkdir -p dist
           cp target/release/jellyfin-cli dist/jellyfin-cli-macos-x86_64
 
-      - name: Upload to Release
+      - name: Upload Artifact
         uses: softprops/action-gh-release@v1
         with:
           files: dist/jellyfin-cli-macos-x86_64
