@@ -1,7 +1,7 @@
 use crate::jellyfin::models::{ItemsResponse, MediaItem, MediaType,SearchResponse};
 use crate::jellyfin::config::load_config;
 use crate::jellyfin::http::authed_get_json;
-
+// list all items in jellyfin
 pub async fn list_items(base_url: &str, media_type: MediaType) -> Result<Vec<MediaItem>, String> {
     let config = load_config().map_err(|_| "Failed to load config")?;
     let user_id = config
@@ -18,7 +18,7 @@ pub async fn list_items(base_url: &str, media_type: MediaType) -> Result<Vec<Med
     let res: ItemsResponse = authed_get_json(&url).await?;
     Ok(res.items)
 }
-
+// Search for any item in jellyfin
 pub async fn search_items(base_url: &str, query: &str) -> Result<Vec<MediaItem>, reqwest::Error> {
     let url = format!(
         "{}/Search/Hints?SearchTerm={}",
