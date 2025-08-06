@@ -28,12 +28,12 @@ jobs:
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
-
       - name: 🦀 Install Rust
-        uses: actions/setup-rust@v1
+        uses: actions-rs/toolchain@v1
         with:
-          rust-version: stable
+          toolchain: stable
           target: ${{ matrix.target }}
+          override: true
 
       - name: 📦 Build Binary
         run: cargo build --release --target ${{ matrix.target }}
