@@ -1,18 +1,40 @@
-use crate::jellyfin::auth::login;
-
+mod cli;
 mod jellyfin;
+mod utils;
+
+use clap::Parser;
+use cli::args::{Cli, Commands};
+use cli::login::handle_login;
+use cli::list::handle_list;
+use cli::search::handle_search;
+use cli::pick::handle_pick;
 #[tokio::main]
 async fn main() {
-    let base_url = "http://192.168.1.70:8096";
-    let username = "brian";
-    let password = "l1sa0s0s0";
-    match login(base_url, username, password).await {
-        Ok(response) => {
-            println!("Login was successful with access token {}", response.access_token);
-            println!("Welcome, {} (ID: {})", response.user.name, response.user.id);
+    let cli = Cli::parse();
+
+    match cli.command {
+        Commands::Login {
+            server,
+            username,
+            password,
+        } => {
+            handle_login(&server, &username, &password).await;
         }
-        Err(e) => {
-            println!("Login failed: {}", e);
+
+        Commands::List {
+            media_type,
+            server,
+        } => {
+            handle_list(&media_type, server).await;
+        }
+
+        Commands::Search { server, query } => {
+            handle_search(server, &query).await;
+        }
+        Commands::Pick {
+            server,query
+        } => {
+            handle_pick(server, &query).await;
         }
     }
 }
