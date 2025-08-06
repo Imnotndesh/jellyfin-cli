@@ -31,7 +31,7 @@ async fn main() {
         Commands::Search { server, query } => {
             handle_search(server, &query).await;
         }
-        Commands::Pick {
+        Commands::Watch {
             server,query
         } => {
             handle_pick(server, &query).await;

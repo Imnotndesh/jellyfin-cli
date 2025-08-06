@@ -37,7 +37,7 @@ pub enum Commands {
         #[arg(short, long)]
         server: Option<String>,
     },
-    Pick {
+    Watch {
         /// Query string to search for
         #[arg(short, long)]
         query: String,
