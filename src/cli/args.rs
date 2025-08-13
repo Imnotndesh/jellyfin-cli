@@ -40,4 +40,8 @@ pub enum Commands {
         #[arg(short, long)]
         server: Option<String>,
     },
+    SetPlayer {
+        #[arg(short, long)]
+        player: Option<String>,
+    },
 }

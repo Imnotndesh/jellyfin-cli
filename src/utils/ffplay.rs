@@ -11,7 +11,7 @@ pub fn show_playback_menu(mut child: Child) {
             println!("Playback stopped.");
         }
         _ => {
-            println!("❌ Unknown option or cancelled.");
+            println!("Unknown option or cancelled.");
             let _ = child.kill();
         }
     }

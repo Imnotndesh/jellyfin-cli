@@ -8,6 +8,8 @@ use cli::login::handle_login;
 use cli::list::handle_list;
 use cli::search::handle_search;
 use cli::pick::handle_pick;
+use crate::cli::config::handle_change_player;
+
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
@@ -35,6 +37,10 @@ async fn main() {
             server,query
         } => {
             handle_pick(server, &query).await;
+        }
+        Commands::SetPlayer {
+            player,}=>{
+            handle_change_player(&player)
         }
     }
 }

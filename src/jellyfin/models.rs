@@ -1,4 +1,5 @@
 use std::fmt;
+use std::str::FromStr;
 use serde::{Serialize, Deserialize };
 // request payload
 #[derive(Serialize)]
@@ -47,10 +48,34 @@ pub struct MediaItem {
     // #[serde(rename = "RunTimeTicks")]
     // pub runtime_ticks: Option<i64>,
 }
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum PlayerType {
+    FFMPEG,
+    MPV,
+    VLC,
+}
+impl FromStr for PlayerType {
+    type Err = String;
+    fn from_str(s :&str) -> Result<Self,Self::Err> {
+        match s.to_lowercase().as_str() {
+            "mpv" => Ok(PlayerType::MPV),
+            "ffmpeg" => Ok(PlayerType::FFMPEG),
+            "vlc" => Ok(PlayerType::VLC),
+            _ => Err(format!("Unknown player: {}", s)),
+        }
+    }
+}
 #[derive(Debug, Deserialize)]
 pub struct SearchResponse {
     #[serde(rename = "SearchHints")]
     pub search_hints: Vec<MediaItem>,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct JellyfinConfig {
+    pub access_token: Option<String>,
+    pub server: Option<String>,
+    pub user_id: Option<String>,
+    pub default_player: Option<String>,
 }
 
 /// Response wrapper from /Items endpoint
@@ -78,7 +103,6 @@ impl MediaType {
 }
 impl fmt::Display for MediaType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // Use the `as_str()` helper for clean string values
         write!(f, "{}", self.as_str())
     }
 }
