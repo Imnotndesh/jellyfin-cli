@@ -106,3 +106,31 @@ impl fmt::Display for MediaType {
         write!(f, "{}", self.as_str())
     }
 }
+/// Jellyfin season/episode models
+#[derive(Debug, Deserialize)]
+pub struct SeasonsResponse {
+    #[serde(rename = "Items")]
+    pub(crate) items: Vec<Season>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EpisodesResponse {
+    #[serde(rename = "Items")]
+    pub(crate) items: Vec<Episode>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Season {
+    #[serde(rename = "Id")]
+    pub id: String,
+    #[serde(rename = "Name")]
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Episode {
+    #[serde(rename = "Id")]
+    pub id: String,
+    #[serde(rename = "Name")]
+    pub name: String,
+}

@@ -1,27 +1,24 @@
 use inquire::Select;
-use crate::jellyfin::models::MediaItem;
-// Will Use inquire::Select to show a list of selectable options
-pub fn choose_item(items: &[MediaItem]) -> Option<&MediaItem> {
+
+pub fn choose_item<T, F>(items: &[T], display: F) -> Option<&T>
+where
+    F: Fn(&T) -> String,
+{
     if items.is_empty() {
         println!("No items available.");
         return None;
     }
-    let options: Vec<String> = items
-        .iter()
-        .map(|item| format!("{} [{}]", item.name, item.media_type))
-        .collect();
 
-    // Show selection prompt
-    let selection = Select::new("Choose an item:", options)
-        .prompt();
+    let options: Vec<String> = items.iter().map(|item| display(item)).collect();
+
+    let selection = Select::new("Choose an item:", options).prompt();
 
     match selection {
         Ok(choice) => {
-            let index = items.iter().position(|item| {
-                format!("{} [{}]", item.name, item.media_type) == choice
-            })?;
+            let index = items.iter().position(|item| display(item) == choice)?;
             Some(&items[index])
         }
         Err(_) => None,
     }
 }
+

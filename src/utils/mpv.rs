@@ -32,7 +32,7 @@ pub fn play_with_controls(stream_url: &str) -> Option<Child> {
     {
         Ok(child) => Some(child),
         Err(e) => {
-            eprintln!("❌ Failed to start mpv: {}", e);
+            eprintln!("Failed to start mpv: {}", e);
             None
         }
     }
