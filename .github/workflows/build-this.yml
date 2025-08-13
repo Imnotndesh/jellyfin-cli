@@ -3,86 +3,39 @@ name: Release Cross-Platform Binaries
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v0.1.0
+      - 'v*.*.*'
+
+permissions:
+  contents: write
 
 jobs:
   build-linux:
-    name: Build Linux Binary
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - name: Build
-        run: cargo build --release
-
-      - name: Prepare Artifact
-        run: |
-          mkdir -p dist
-          cp target/release/jellyfin-cli dist/jellyfin-cli-linux-x86_64
-
-      - name: Upload Artifact
-        uses: softprops/action-gh-release@v1
+      - run: cargo build --release
+      - run: mkdir -p dist && cp target/release/jellyfin-cli dist/jellyfin-cli-linux-x86_64
+      - uses: softprops/action-gh-release@v1
         with:
           files: dist/jellyfin-cli-linux-x86_64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows:
-    name: Build Windows Binary
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - name: Build
-        run: cargo build --release
-
-      - name: Prepare Artifact
-        run: |
-          mkdir dist
-          copy target\release\jellyfin-cli.exe dist\jellyfin-cli-windows-x86_64.exe
-
-      - name: Upload Artifact
-        uses: softprops/action-gh-release@v1
+      - run: cargo build --release
+      - run: mkdir dist && cp target/release/jellyfin-cli.exe dist/jellyfin-cli-windows-x86_64.exe
+        shell: bash
+      - uses: softprops/action-gh-release@v1
         with:
-          files: dist\jellyfin-cli-windows-x86_64.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-macos:
-    name: Build macOS Binary
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Build
-        run: cargo build --release
-
-      - name: Prepare Artifact
-        run: |
-          mkdir -p dist
-          cp target/release/jellyfin-cli dist/jellyfin-cli-macos-x86_64
-
-      - name: Upload Artifact
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/jellyfin-cli-macos-x86_64
+          files: dist/jellyfin-cli-windows-x86_64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
